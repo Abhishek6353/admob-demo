@@ -13,15 +13,15 @@ struct AdMobIDs {
     static let isTestMode = true // Set to false for production
     
     static var appOpenAdUnitID: String {
-        isTestMode ? "ca-app-pub-3940256099942544/5575463023" : "ca-app-pub-3935114114396535/4783727850"
+        isTestMode ? "ca-app-pub-3940256099942544/5575463023" : ""
     }
     
     static var bannerAdUnitID: String {
-        isTestMode ? "ca-app-pub-3940256099942544/2435281174" : "ca-app-pub-3935114114396535/2181615249"
+        isTestMode ? "ca-app-pub-3940256099942544/2435281174" : ""
     }
     
     static var interstitialAdUnitID: String {
-        isTestMode ? "ca-app-pub-3940256099942544/4411468910" : "ca-app-pub-3935114114396535/4495242806"
+        isTestMode ? "ca-app-pub-3940256099942544/4411468910" : ""
     }
     
     static var rewardedAdUnitID: String {
@@ -67,11 +67,10 @@ class UserProgress: ObservableObject {
 
 // MARK: - Main Content View
 struct ContentView: View {
-    @StateObject private var appOpenAdManager = AppOpenAdManager()
+    @EnvironmentObject var appOpenAdManager: AppOpenAdManager
     @StateObject private var interstitialAdManager = InterstitialAdManager()
     @StateObject private var rewardedAdManager = RewardedAdManager()
     @StateObject private var userProgress = UserProgress()
-    @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
         NavigationStack {
@@ -103,11 +102,6 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 setupAds()
-            }
-            .onChange(of: scenePhase) { newPhase in
-                if newPhase == .active {
-                    appOpenAdManager.tryToShowAdIfAvailable()
-                }
             }
         }
         .environmentObject(userProgress)
@@ -163,8 +157,8 @@ struct ContentView: View {
     }
     
     private func setupAds() {
-        appOpenAdManager.loadAd()
-        appOpenAdManager.tryToShowAdIfAvailable()
+        // App Open Ad is managed in admob_demoApp.swift
+        // Just load the other ads here
         interstitialAdManager.loadAd()
         rewardedAdManager.loadAd()
     }

@@ -61,50 +61,99 @@ private func rootViewController() -> UIViewController? {
 final class AppOpenAdManager: NSObject, ObservableObject, FullScreenContentDelegate {
     private var appOpenAd: AppOpenAd?
     @Published var isShowingAd = false
-    private var lastAdDisplayTime: Date?
-    private let adDisplayInterval: TimeInterval = 4 * 3600 // 4 hours
+    @Published var isAdReady = false
+    private var loadTime: Date?
+    private var isLoadingAd = false
+    private var lastAdDismissTime: Date?
+    private let minimumInterval: TimeInterval = 4 * 3600 // 4 hours between ads
 
     func loadAd() {
+        guard !isLoadingAd else {
+            print("⏳ App Open Ad already loading")
+            return
+        }
+        
+        isLoadingAd = true
+        isAdReady = false
+        print("🔄 Loading App Open Ad...")
+        
         let request = Request()
         AppOpenAd.load(
             with: AdMobIDs.appOpenAdUnitID,
             request: request
         ) { [weak self] ad, error in
+            guard let self = self else { return }
+            
+            self.isLoadingAd = false
+            
             if let ad = ad {
-                self?.appOpenAd = ad
+                self.appOpenAd = ad
+                self.loadTime = Date()
+                self.isAdReady = true
                 ad.fullScreenContentDelegate = self
+                print("✅ App Open Ad loaded successfully")
             } else if let error = error {
-                print("Failed to load app open ad: \(error.localizedDescription)")
+                print("❌ Failed to load app open ad: \(error.localizedDescription)")
+                self.isAdReady = false
             }
         }
     }
 
     func tryToShowAdIfAvailable() {
         // Check if enough time has passed since last ad
-        if let lastTime = lastAdDisplayTime,
-           Date().timeIntervalSince(lastTime) < adDisplayInterval {
+        if let lastDismiss = lastAdDismissTime {
+            let timeSinceLastAd = Date().timeIntervalSince(lastDismiss)
+            if timeSinceLastAd < minimumInterval {
+                print("⏰ Too soon to show another ad (last shown \(Int(timeSinceLastAd))s ago)")
+                return
+            }
+        }
+        
+        guard !isShowingAd else {
+            print("⚠️ App Open Ad already showing")
             return
         }
         
-        guard let ad = appOpenAd,
-              let root = rootViewController(),
-              !isShowingAd else { return }
+        guard let ad = appOpenAd, isAdReady else {
+            print("⚠️ App Open Ad not ready")
+            if !isLoadingAd && appOpenAd == nil {
+                print("🔄 Loading new App Open Ad")
+                loadAd()
+            }
+            return
+        }
         
+        // Check if ad is too old (4 hours)
+        if let loadTime = loadTime, Date().timeIntervalSince(loadTime) > 4 * 3600 {
+            print("⚠️ App Open Ad expired, loading new one")
+            appOpenAd = nil
+            isAdReady = false
+            loadAd()
+            return
+        }
+        
+        guard let root = rootViewController() else {
+            print("❌ No root view controller available")
+            return
+        }
+        
+        print("📺 Presenting App Open Ad")
         isShowingAd = true
         ad.present(from: root)
-        lastAdDisplayTime = Date()
     }
 
     // MARK: - FullScreenContentDelegate
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
         isShowingAd = false
+        isAdReady = false
         appOpenAd = nil
-        print("✅ App Open Ad dismissed")
+        print("✅ App Open Ad dismissed - Loading next ad")
         loadAd() // Preload next ad
     }
     
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         isShowingAd = false
+        isAdReady = false
         appOpenAd = nil
         print("❌ App open ad failed to present: \(error.localizedDescription)")
         loadAd()
