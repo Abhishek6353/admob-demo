@@ -6,13 +6,30 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		46945C2B2EDB7B0A00672FF8 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 46945C2A2EDB7B0A00672FF8 /* GoogleMobileAds */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		46945C192EDB761500672FF8 /* admob-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "admob-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		46945C2D2EDB7D4C00672FF8 /* Exceptions for "admob-demo" folder in "admob-demo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 46945C182EDB761500672FF8 /* admob-demo */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		46945C1B2EDB761500672FF8 /* admob-demo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				46945C2D2EDB7D4C00672FF8 /* Exceptions for "admob-demo" folder in "admob-demo" target */,
+			);
 			path = "admob-demo";
 			sourceTree = "<group>";
 		};
@@ -23,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46945C2B2EDB7B0A00672FF8 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +83,7 @@
 			);
 			name = "admob-demo";
 			packageProductDependencies = (
+				46945C2A2EDB7B0A00672FF8 /* GoogleMobileAds */,
 			);
 			productName = "admob-demo";
 			productReference = 46945C192EDB761500672FF8 /* admob-demo.app */;
@@ -94,6 +113,9 @@
 			);
 			mainGroup = 46945C102EDB761500672FF8;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				46945C292EDB7B0A00672FF8 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 46945C1A2EDB761500672FF8 /* Products */;
 			projectDirPath = "";
@@ -256,6 +278,7 @@
 				DEVELOPMENT_TEAM = M9WYKNZLTB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "admob-demo/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -288,6 +311,7 @@
 				DEVELOPMENT_TEAM = M9WYKNZLTB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "admob-demo/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -332,6 +356,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		46945C292EDB7B0A00672FF8 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		46945C2A2EDB7B0A00672FF8 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 46945C292EDB7B0A00672FF8 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 46945C112EDB761500672FF8 /* Project object */;
 }
